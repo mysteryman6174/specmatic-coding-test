@@ -58,6 +58,7 @@ def validate_product(data: dict[str, str] | None):
         abort(400, "Invalid product name, must be a string")
 
     inventory = validate_int(data, "inventory")
+    cost = validate_int(data, "cost", allow_float=True)
     product_type = validate_product_type(data.get("type"))
 
-    return NewProduct(name=name, type=product_type, inventory=inventory)
+    return NewProduct(name=name, type=product_type, inventory=inventory, cost=cost)

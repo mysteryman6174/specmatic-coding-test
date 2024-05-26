@@ -22,6 +22,7 @@ class NewProduct(TypedDict):
     name: str
     type: ProductType
     inventory: int
+    cost: float
 
 
 class Product(NewProduct):
