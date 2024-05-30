@@ -1,28 +1,25 @@
 from datetime import datetime
-
-from flask import Flask, json, request
-from werkzeug.exceptions import HTTPException
-
+from flask import Flask, jsonify, request
+from marshmallow.exceptions import ValidationError
+from openapi_parser import parse
 from task.database import Database
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+api_specs = parse("products_api.yaml")
 db = Database()
 
 
-@app.errorhandler(HTTPException)
-def http_error_handler(e):
-    response = e.get_response()
-    response.data = json.dumps(
+@app.errorhandler(ValidationError)
+def http_error_handler(e: "ValidationError"):
+    return jsonify(
         {
             "timestamp": datetime.now().isoformat(),
             "path": request.path,
-            "status": e.code,
-            "error": e.name,
+            "status": 400,
+            "error": "Bad Request",
         }
-    )
-    response.content_type = "application/json"
-    return response
+    ), 400
 
 
 from task.products.routes import products  # noqa: E402

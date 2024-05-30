@@ -1,26 +1,9 @@
-import enum
 from typing import TypedDict
-
-
-class MetaEum(enum.EnumMeta):
-    def __contains__(cls, item):
-        try:
-            cls(item)
-        except ValueError:
-            return False
-        return True
-
-
-class ProductType(str, enum.Enum, metaclass=MetaEum):
-    BOOK = "book"
-    GADGET = "gadget"
-    FOOD = "food"
-    OTHER = "other"
 
 
 class NewProduct(TypedDict):
     name: str
-    type: ProductType
+    type: str
     inventory: int
     cost: float
 
@@ -35,7 +18,7 @@ class Database:
         self.length = 0
 
     # PRODUCT METHODS
-    def get_products(self, product_type: "ProductType|None" = None) -> list[Product]:
+    def get_products(self, product_type: "str|None" = None) -> list[Product]:
         if product_type:
             return [product for product in self.data if product["type"] == product_type]
         return self.data
